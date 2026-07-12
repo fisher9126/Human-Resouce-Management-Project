@@ -1,0 +1,191 @@
+:root {
+  --brand: #4f46e5;
+  --brand-2: #7c3aed;
+  --font-body: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-head: 'Plus Jakarta Sans', var(--font-body);
+}
+
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+body {
+  font-family: var(--font-body);
+  background: #f5f7fb;
+  scroll-behavior: smooth;
+}
+
+h1, h2, h3, h4, h5,
+.ant-typography, .brand-logo,
+.stat-card .stat-value { font-family: var(--font-head); }
+
+/* Scrollbar dep + gradient */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #a5b4fc, #c4b5fd);
+  border-radius: 10px; border: 2px solid #f5f7fb;
+}
+::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #818cf8, #a78bfa); }
+
+/* ===== Login background dong ===== */
+.login-bg {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(-45deg, #4f46e5, #7c3aed, #2563eb, #06b6d4);
+  background-size: 400% 400%;
+  animation: gradientMove 12s ease infinite;
+  padding: 20px;
+  position: relative; overflow: hidden;
+}
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+/* bong bay lo lung tren nen login */
+.login-bg::before, .login-bg::after {
+  content: ""; position: absolute; border-radius: 50%;
+  background: rgba(255,255,255,0.12); filter: blur(4px);
+  animation: floaty 9s ease-in-out infinite;
+}
+.login-bg::before { width: 240px; height: 240px; top: -60px; left: -40px; }
+.login-bg::after { width: 180px; height: 180px; bottom: -50px; right: -30px; animation-delay: 2s; }
+@keyframes floaty {
+  0%,100% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-26px) translateX(14px); }
+}
+
+/* ===== Card thong so dashboard ===== */
+.stat-card {
+  border-radius: 18px;
+  padding: 22px 24px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(79,70,229,0.18);
+  transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s ease;
+  cursor: default;
+}
+.stat-card::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.25) 50%, transparent 70%);
+  transform: translateX(-120%); transition: transform .7s ease;
+}
+.stat-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 22px 48px rgba(79,70,229,0.32); }
+.stat-card:hover::after { transform: translateX(120%); }
+.stat-card .stat-icon {
+  position: absolute; right: -8px; bottom: -12px;
+  font-size: 96px; opacity: 0.16; transition: transform .4s ease;
+}
+.stat-card:hover .stat-icon { transform: scale(1.15) rotate(-8deg); }
+.stat-card .stat-value { font-size: 34px; font-weight: 800; line-height: 1.1; }
+.stat-card .stat-label { font-size: 14px; opacity: 0.92; margin-top: 4px; }
+
+.grad-indigo { background: linear-gradient(135deg, #6366f1, #4f46e5); }
+.grad-violet { background: linear-gradient(135deg, #a855f7, #7c3aed); }
+.grad-cyan   { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+.grad-amber  { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 10px 30px rgba(217,119,6,0.2); }
+
+/* ===== Sidebar logo ===== */
+.brand-logo {
+  min-height: 60px; display: flex; align-items: center; gap: 10px;
+  padding: 12px 18px; color: #fff; font-weight: 700; font-size: 14px;
+  letter-spacing: .2px; line-height: 1.25;
+}
+.brand-logo i { transition: transform .5s ease; }
+.brand-logo:hover i { transform: rotate(-12deg) scale(1.15); }
+
+/* menu item hover truot nhe */
+.ant-menu-item { transition: padding-left .25s ease, background .25s ease !important; }
+.ant-menu-item:hover { padding-left: 30px !important; }
+
+/* menu item ACTIVE: chu to + noi bong bong */
+.ant-menu-item-selected {
+  background: rgba(255,255,255,0.20) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+  animation: bubblePop .45s cubic-bezier(.34,1.56,.64,1);
+}
+.ant-menu-item-selected .ant-menu-title-content {
+  font-size: 16px; font-weight: 700; letter-spacing: .2px;
+  display: inline-block; transform-origin: left center;
+}
+.ant-menu-item-selected .anticon {
+  transform: scale(1.2);
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
+}
+@keyframes bubblePop {
+  0% { transform: scale(0.9); }
+  60% { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+
+/* ===== Card chung: hover nang len ===== */
+.ant-card {
+  transition: transform .28s cubic-bezier(.2,.8,.2,1), box-shadow .28s ease !important;
+}
+.ant-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(31,41,55,0.12) !important;
+}
+
+/* ===== Nut: hover + click ripple ===== */
+.ant-btn {
+  transition: transform .15s ease, box-shadow .2s ease, filter .2s ease !important;
+  position: relative; overflow: hidden;
+}
+.ant-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(79,70,229,0.22); }
+.ant-btn:active { transform: translateY(0) scale(.96); }
+.ant-btn-primary:hover { filter: brightness(1.05); }
+
+/* ripple khi click */
+.ant-btn::after {
+  content: ""; position: absolute; left: 50%; top: 50%;
+  width: 0; height: 0; border-radius: 50%;
+  background: rgba(255,255,255,0.5);
+  transform: translate(-50%, -50%); opacity: 0;
+}
+.ant-btn:active::after {
+  width: 240px; height: 240px; opacity: 1;
+  transition: width .5s ease, height .5s ease, opacity .8s ease;
+}
+
+/* ===== Hang bang: hover doi mau + nhich ===== */
+.ant-table-tbody > tr { transition: background .2s ease, transform .2s ease; }
+.ant-table-tbody > tr:hover > td { background: #eef2ff !important; }
+
+/* ===== Avatar glow khi hover ===== */
+.ant-avatar { transition: transform .3s ease, box-shadow .3s ease; }
+.ant-avatar:hover { transform: scale(1.08); box-shadow: 0 0 0 4px rgba(124,58,237,0.18); }
+
+/* ===== Tag/Input focus ===== */
+.ant-input-affix-wrapper, .ant-input, .ant-select-selector {
+  transition: box-shadow .25s ease, border-color .25s ease !important;
+}
+
+/* fade-in cho noi dung trang */
+.page-fade { animation: fadeInUp .45s ease both; }
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== Scroll reveal (dung voi hook useScrollReveal) ===== */
+.reveal {
+  opacity: 0; transform: translateY(28px);
+  transition: opacity .6s ease, transform .6s cubic-bezier(.2,.8,.2,1);
+}
+.reveal.reveal-visible { opacity: 1; transform: translateY(0); }
+
+/* glass header */
+.app-header {
+  background: rgba(255,255,255,0.85) !important;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #eef0f6;
+}
+
+/* tieu de gradient */
+.grad-title {
+  background: linear-gradient(90deg, #4f46e5, #7c3aed);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
