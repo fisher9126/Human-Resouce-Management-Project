@@ -30,15 +30,25 @@ public class NhanVienService {
 
     private static final String MAT_KHAU_MAC_DINH = "123456";
 
-    public Page<NhanVien> search(String keyword, Integer phongBanId, Integer chucVuId, int page, int size) {
+    public Page<NhanVien> search(String keyword, Integer phongBanId, Integer chucVuId,
+                                 TaiKhoan.VaiTro vaiTro, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
         String kw = (keyword == null || keyword.isBlank()) ? null : keyword.trim();
-        return nhanVienRepo.search(kw, phongBanId, chucVuId, pageable);
+        return nhanVienRepo.search(kw, phongBanId, chucVuId, vaiTro, pageable);
     }
 
     public NhanVien getById(Integer id) {
         return nhanVienRepo.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Khong tim thay nhan vien id=" + id));
+    }
+
+    // Kiem tra Manager chi duoc thao tac trong phong ban cua minh
+    public void checkPhongBanQuyen(NhanVien nv, Integer phongBanIdCuaManager) {
+        if (phongBanIdCuaManager == null) return; // Admin (khong gioi han)
+        Integer pbNv = nv.getPhongBan() != null ? nv.getPhongBan().getId() : null;
+        if (!phongBanIdCuaManager.equals(pbNv)) {
+            throw new IllegalStateException("Ban chi duoc quan ly nhan vien trong phong ban cua minh");
+        }
     }
 
     @Transactional

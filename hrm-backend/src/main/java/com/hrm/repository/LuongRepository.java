@@ -19,4 +19,17 @@ public interface LuongRepository extends JpaRepository<Luong, Integer> {
 
     @Query("SELECT COALESCE(SUM(l.thucNhan), 0) FROM Luong l WHERE l.thang = :thang AND l.nam = :nam")
     BigDecimal tongQuyLuong(@Param("thang") Integer thang, @Param("nam") Integer nam);
+
+    // ===== Loc theo phong ban (cho Manager) =====
+    @Query("SELECT l FROM Luong l WHERE l.thang = :thang AND l.nam = :nam AND l.nhanVien.phongBan.id = :phongBanId")
+    List<Luong> findByThangAndNamAndPhongBan(@Param("thang") Integer thang, @Param("nam") Integer nam,
+                                             @Param("phongBanId") Integer phongBanId);
+
+    @Query("SELECT COALESCE(SUM(l.thucNhan), 0) FROM Luong l WHERE l.thang = :thang AND l.nam = :nam AND l.nhanVien.phongBan.id = :phongBanId")
+    BigDecimal tongQuyLuongTheoPhongBan(@Param("thang") Integer thang, @Param("nam") Integer nam,
+                                        @Param("phongBanId") Integer phongBanId);
+
+    @Query("SELECT COUNT(l) FROM Luong l WHERE l.thang = :thang AND l.nam = :nam AND l.nhanVien.phongBan.id = :phongBanId")
+    long demBangLuongTheoPhongBan(@Param("thang") Integer thang, @Param("nam") Integer nam,
+                                  @Param("phongBanId") Integer phongBanId);
 }

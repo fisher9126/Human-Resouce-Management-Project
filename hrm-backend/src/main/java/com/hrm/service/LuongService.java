@@ -23,11 +23,13 @@ public class LuongService {
     private final NhanVienRepository nhanVienRepo;
     private final ChamCongService chamCongService;
 
-    /** Tinh luong cho toan bo nhan vien dang lam viec trong thang. */
+    /** Tinh luong cho nhan vien dang lam viec. phongBanId != null => chi phong do (Manager). */
     @Transactional
-    public List<Luong> tinhLuongToanCongTy(TinhLuongRequest req) {
+    public List<Luong> tinhLuongToanCongTy(TinhLuongRequest req, Integer phongBanId) {
         List<NhanVien> dsNV = nhanVienRepo.findAll().stream()
                 .filter(nv -> nv.getTrangThai() != NhanVien.TrangThaiNhanVien.DaNghiViec)
+                .filter(nv -> phongBanId == null
+                        || (nv.getPhongBan() != null && phongBanId.equals(nv.getPhongBan().getId())))
                 .toList();
 
         List<Luong> ketQua = new ArrayList<>();
@@ -98,6 +100,11 @@ public class LuongService {
 
     public List<Luong> bangLuongThang(int thang, int nam) {
         return luongRepo.findByThangAndNam(thang, nam);
+    }
+
+    // Manager: chi bang luong nhan vien phong minh
+    public List<Luong> bangLuongThangTheoPhongBan(int thang, int nam, Integer phongBanId) {
+        return luongRepo.findByThangAndNamAndPhongBan(thang, nam, phongBanId);
     }
 
     public List<Luong> phieuLuongCuaToi(Integer nhanVienId) {

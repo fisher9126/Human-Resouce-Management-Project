@@ -35,7 +35,10 @@ public class NghiPhepController {
 
     @GetMapping("/pending")
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
-    public ApiResponse<List<NghiPhep>> choDuyet() {
+    public ApiResponse<List<NghiPhep>> choDuyet(@AuthenticationPrincipal CustomUserDetails user) {
+        if (user.isManager() && user.getPhongBanId() != null) {
+            return ApiResponse.ok(service.choDuyetTheoPhongBan(user.getPhongBanId()));
+        }
         return ApiResponse.ok(service.choDuyet());
     }
 
@@ -44,6 +47,7 @@ public class NghiPhepController {
     public ApiResponse<NghiPhep> duyet(@AuthenticationPrincipal CustomUserDetails user,
                                        @PathVariable Integer id,
                                        @Valid @RequestBody DuyetDonRequest req) {
+        if (user.isManager()) service.checkPhongBan(id, user.getPhongBanId());
         NghiPhep don = service.duyet(id, user.getNhanVienId(), req);
         String msg = Boolean.TRUE.equals(req.getDuyet())
                 ? "Da phe duyet don nghi phep thanh cong" : "Da tu choi don nghi phep";

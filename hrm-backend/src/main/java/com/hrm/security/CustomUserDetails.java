@@ -24,6 +24,20 @@ public class CustomUserDetails implements UserDetails {
         return taiKhoan.getNhanVien() != null ? taiKhoan.getNhanVien().getId() : null;
     }
 
+    // Phong ban cua nguoi dang dang nhap (dung de gioi han pham vi cua Manager)
+    public Integer getPhongBanId() {
+        if (taiKhoan.getNhanVien() == null || taiKhoan.getNhanVien().getPhongBan() == null) return null;
+        return taiKhoan.getNhanVien().getPhongBan().getId();
+    }
+
+    public boolean isAdmin() {
+        return taiKhoan.getVaiTro() == TaiKhoan.VaiTro.ROLE_ADMIN;
+    }
+
+    public boolean isManager() {
+        return taiKhoan.getVaiTro() == TaiKhoan.VaiTro.ROLE_MANAGER;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(taiKhoan.getVaiTro().name()));

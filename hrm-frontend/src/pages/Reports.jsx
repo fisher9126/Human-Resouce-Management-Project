@@ -42,7 +42,6 @@ export default function Reports() {
     animation: { appear: { animation: 'wave-in', duration: 1800, easing: 'easeQuadOut' } },
   };
 
-
   return (
     <div>
       <Title level={3} style={{ marginBottom: 16 }}>Báo cáo & Thống kê</Title>
@@ -80,5 +79,4 @@ export default function Reports() {
       </Row>
     </div>
   );
-
 }

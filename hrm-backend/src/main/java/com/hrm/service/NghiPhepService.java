@@ -97,4 +97,20 @@ public class NghiPhepService {
     public List<NghiPhep> choDuyet() {
         return nghiPhepRepo.findByTrangThai(NghiPhep.TrangThaiDon.ChoDuyet);
     }
+
+    // Manager: chi don cho duyet cua phong minh
+    public List<NghiPhep> choDuyetTheoPhongBan(Integer phongBanId) {
+        return nghiPhepRepo.findByTrangThaiAndPhongBan(NghiPhep.TrangThaiDon.ChoDuyet, phongBanId);
+    }
+
+    // Kiem tra don co thuoc phong ban cua manager khong
+    public void checkPhongBan(Integer donId, Integer phongBanIdManager) {
+        if (phongBanIdManager == null) return;
+        NghiPhep don = nghiPhepRepo.findById(donId)
+                .orElseThrow(() -> new IllegalArgumentException("Khong tim thay don"));
+        Integer pb = don.getNhanVien().getPhongBan() != null ? don.getNhanVien().getPhongBan().getId() : null;
+        if (!phongBanIdManager.equals(pb)) {
+            throw new IllegalStateException("Ban chi duyet don cua nhan vien phong ban minh");
+        }
+    }
 }

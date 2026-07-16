@@ -28,9 +28,12 @@ public interface NhanVienRepository extends JpaRepository<NhanVien, Integer> {
            "   OR nv.sdt LIKE CONCAT('%', :keyword, '%') " +
            "   OR CAST(nv.id AS string) LIKE CONCAT('%', :keyword, '%')) " +
            "AND (:phongBanId IS NULL OR nv.phongBan.id = :phongBanId) " +
-           "AND (:chucVuId IS NULL OR nv.chucVu.id = :chucVuId)")
+           "AND (:chucVuId IS NULL OR nv.chucVu.id = :chucVuId) " +
+           "AND (:vaiTro IS NULL OR EXISTS " +
+           "   (SELECT 1 FROM TaiKhoan tk WHERE tk.nhanVien = nv AND tk.vaiTro = :vaiTro))")
     Page<NhanVien> search(@Param("keyword") String keyword,
                           @Param("phongBanId") Integer phongBanId,
                           @Param("chucVuId") Integer chucVuId,
+                          @Param("vaiTro") com.hrm.entity.TaiKhoan.VaiTro vaiTro,
                           Pageable pageable);
 }

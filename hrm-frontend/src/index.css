@@ -189,3 +189,33 @@ h1, h2, h3, h4, h5,
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+/* ===== RESPONSIVE: tablet & mobile ===== */
+/* Bang tu cuon ngang khi tran (khong vo layout) */
+.ant-table-wrapper { overflow-x: auto; }
+
+@media (max-width: 992px) {
+  .stat-card .stat-value { font-size: 28px; }
+  .stat-card { padding: 18px 20px; }
+}
+
+@media (max-width: 768px) {
+  /* Content padding gon lai */
+  .ant-card-body { padding: 16px; }
+  /* Tieu de nho lai cho vua man */
+  h1.ant-typography, h2.ant-typography, h3.ant-typography { font-size: 20px !important; }
+  .stat-card .stat-value { font-size: 26px; }
+  .stat-card .stat-icon { font-size: 72px; }
+  /* Modal gan full man hinh */
+  .ant-modal { max-width: calc(100vw - 24px); margin: 8px auto; }
+  /* Header khong bi chat */
+  .app-header { padding: 0 12px !important; }
+  /* Descriptions ho so xep doc de doc */
+  .ant-descriptions-view { overflow-x: auto; }
+}
+
+@media (max-width: 576px) {
+  /* Nut trong toolbar xuong dong gon */
+  .ant-space { flex-wrap: wrap; }
+  .stat-card .stat-value { font-size: 24px; }
+}

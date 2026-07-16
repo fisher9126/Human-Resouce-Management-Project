@@ -21,9 +21,11 @@ public class LuongController {
 
     @PostMapping("/calculate")
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
-    public ApiResponse<List<Luong>> tinhLuong(@RequestBody TinhLuongRequest req) {
+    public ApiResponse<List<Luong>> tinhLuong(@AuthenticationPrincipal CustomUserDetails user,
+                                              @RequestBody TinhLuongRequest req) {
+        Integer pbId = user.isManager() ? user.getPhongBanId() : null;
         return ApiResponse.ok("Tinh luong thanh cong (trang thai Draft)",
-                service.tinhLuongToanCongTy(req));
+                service.tinhLuongToanCongTy(req, pbId));
     }
 
     @PutMapping("/{id}/approve")
@@ -34,7 +36,11 @@ public class LuongController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
-    public ApiResponse<List<Luong>> bangLuong(@RequestParam int thang, @RequestParam int nam) {
+    public ApiResponse<List<Luong>> bangLuong(@AuthenticationPrincipal CustomUserDetails user,
+                                              @RequestParam int thang, @RequestParam int nam) {
+        if (user.isManager() && user.getPhongBanId() != null) {
+            return ApiResponse.ok(service.bangLuongThangTheoPhongBan(thang, nam, user.getPhongBanId()));
+        }
         return ApiResponse.ok(service.bangLuongThang(thang, nam));
     }
 

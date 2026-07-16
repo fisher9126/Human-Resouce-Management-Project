@@ -83,7 +83,11 @@ export default function Dashboard() {
 
   return (
     <div>
-      <Title level={3} className="grad-title" style={{ marginBottom: 20 }}>Tổng quan hệ thống</Title>
+      <Title level={3} className="grad-title" style={{ marginBottom: 20 }}>
+        {hasRole('ROLE_MANAGER') && stats.tenPhongBan
+          ? `Tổng quan phòng ${stats.tenPhongBan}`
+          : 'Tổng quan hệ thống'}
+      </Title>
       <Row gutter={[20, 20]}>
         <Col xs={24} sm={12} lg={6}>
           <StatCard icon={<TeamOutlined />} value={stats.tongNhanVien} label="Tổng nhân viên" cls="grad-indigo" delay={0.05} />

@@ -22,6 +22,8 @@ export default function Employees() {
   const { hasRole } = useAuth();
   const { message } = App.useApp();
   const isAdmin = hasRole('ROLE_ADMIN');
+  const isManager = hasRole('ROLE_MANAGER');
+  const canEdit = isAdmin || isManager; // ca admin va manager deu CRUD duoc
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -29,6 +31,7 @@ export default function Employees() {
   const [page, setPage] = useState(0);
   const [keyword, setKeyword] = useState('');
   const [phongBanId, setPhongBanId] = useState(null);
+  const [vaiTro, setVaiTro] = useState(null);
   const [depts, setDepts] = useState([]);
   const [positions, setPositions] = useState([]);
 
@@ -39,14 +42,14 @@ export default function Employees() {
   const load = async () => {
     setLoading(true);
     try {
-      const res = await api.get('/employees', { params: { keyword, phongBanId, page, size: 8 } });
+      const res = await api.get('/employees', { params: { keyword, phongBanId, vaiTro, page, size: 8 } });
       setData(res.data.data.content);
       setTotal(res.data.data.totalElements);
     } catch (e) { message.error('Không tải được danh sách'); }
     finally { setLoading(false); }
   };
 
-  useEffect(() => { load(); }, [page, keyword, phongBanId]);
+  useEffect(() => { load(); }, [page, keyword, phongBanId, vaiTro]);
   useEffect(() => {
     api.get('/departments').then((r) => setDepts(r.data.data)).catch(() => {});
     api.get('/positions').then((r) => setPositions(r.data.data)).catch(() => {});
@@ -110,8 +113,8 @@ export default function Employees() {
   return (
     <div>
       <Row justify="space-between" align="middle" style={{ marginBottom: 16 }}>
-        <Title level={3} style={{ margin: 0 }}>Quản lý Nhân viên</Title>
-        {isAdmin && <Button type="primary" icon={<PlusOutlined />} onClick={openCreate}>Thêm nhân viên</Button>}
+        <Title level={3} className="grad-title" style={{ margin: 0 }}>Quản lý Nhân viên</Title>
+        {canEdit && <Button type="primary" icon={<PlusOutlined />} onClick={openCreate}>Thêm nhân viên</Button>}
       </Row>
 
       <Card style={{ borderRadius: 16 }}>
@@ -119,13 +122,25 @@ export default function Employees() {
           <Input.Search placeholder="Tìm theo tên / SĐT / mã" allowClear
             prefix={<SearchOutlined />} style={{ width: 260 }}
             onSearch={(v) => { setPage(0); setKeyword(v); }} />
-          <Select placeholder="Lọc phòng ban" allowClear style={{ width: 200 }}
-            onChange={(v) => { setPage(0); setPhongBanId(v || null); }}
-            options={depts.map((d) => ({ value: d.id, label: d.tenPhongBan }))} />
+          {isAdmin && (
+            <Select placeholder="Lọc phòng ban" allowClear style={{ width: 200 }}
+              onChange={(v) => { setPage(0); setPhongBanId(v || null); }}
+              options={depts.map((d) => ({ value: d.id, label: d.tenPhongBan }))} />
+          )}
+          {isAdmin && (
+            <Select placeholder="Lọc vai trò" allowClear style={{ width: 180 }}
+              onChange={(v) => { setPage(0); setVaiTro(v || null); }}
+              options={[
+                { value: 'ROLE_ADMIN', label: 'Quản trị viên' },
+                { value: 'ROLE_MANAGER', label: 'Trưởng phòng' },
+                { value: 'ROLE_EMPLOYEE', label: 'Nhân viên' },
+              ]} />
+          )}
         </Space>
 
         <Table
           rowKey="id" columns={columns} dataSource={data} loading={loading}
+          scroll={{ x: 'max-content' }}
           pagination={{ current: page + 1, pageSize: 8, total, onChange: (p) => setPage(p - 1) }}
         />
       </Card>
